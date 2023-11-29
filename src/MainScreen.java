@@ -407,11 +407,11 @@ public class MainScreen extends JFrame {
             packageSelectedPrice += DisplayDocumentary();
 
         }
-        installationFeeLBL.setText("Installation fee "+subscription.getTotalFee() +"$");
+        installationFeeLBL.setText("Installation Fee "+subscription.getTotalFee() +"$");
         packageFeeLBL.setText("Package Fee "+ packageSelectedPrice + " $");
         totalPrice = subscription.getTotalFee() + packageSelectedPrice;
 
-        totalFeeLBL.setText("Total Amount to Pay"+ totalPrice +" $");
+        totalFeeLBL.setText("Total Amount to Pay "+ totalPrice +" $");
     }
 
     private void NewSubscription(){
@@ -425,8 +425,13 @@ public class MainScreen extends JFrame {
         numberTVFLD.setText(" ");
 
         installationFeeLBL.setText("Installation Fee: ");
-        packageLBL.setText("Package Fee :");
+        packageLBL.setText("Package Fee: ");
         totalFeeLBL.setText("Total Amount to Pay: ");
+
+        //Deselect checkBoxes
+        sportCHKBX.setSelected(false);
+        movieCHKBX.setSelected(false);
+        documentaryCHKBX.setSelected(false);
 
         detailsPackageD.setText("");
         detailsPackageS.setText(" ");
