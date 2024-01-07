@@ -6,6 +6,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -86,6 +87,9 @@ public class MainScreen extends JFrame {
 
     int packageSelectedPrice = 0;
     int totalPrice;
+
+    //Create an array List to save Subscription
+    ArrayList<Subscription> saveSub = new ArrayList<>();
 
     public MainScreen() {
 
@@ -292,7 +296,7 @@ public class MainScreen extends JFrame {
 
 
 
-        /***************************************** Panel 6 TABLE PANEL *************************/
+        /***************************Panel 6 TABLE PANEL**************************/
 
         p6Panel = new JPanel();
         p6Panel.setBounds(650, 250, 350, 450);
@@ -319,7 +323,8 @@ public class MainScreen extends JFrame {
         p6Panel.add(scrollPane);
 
 
-        /***************************************** Panel 7 Action PANEL **********************/
+        /*
+        **************************************** Panel 7 Action PANEL **********************/
 
         p7actionPanel = new JPanel();
         p7actionPanel.setBounds(870, 15, 300, 200);
@@ -338,6 +343,12 @@ public class MainScreen extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 NewSubscription();
+            }
+        });
+        saveBTN.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SaveSubscription();
             }
         });
 
@@ -414,7 +425,7 @@ public class MainScreen extends JFrame {
         totalFeeLBL.setText("Total Amount to Pay "+ totalPrice +" $");
     }
 
-    private void NewSubscription(){
+    private void NewSubscription() {
         subName.setText(" ");
         subLastName.setText(" ");
         subMobile.setText(" ");
@@ -425,7 +436,7 @@ public class MainScreen extends JFrame {
         numberTVFLD.setText(" ");
 
         installationFeeLBL.setText("Installation Fee: ");
-        packageLBL.setText("Package Fee: ");
+        packageFeeLBL.setText("Package Fee: ");
         totalFeeLBL.setText("Total Amount to Pay: ");
 
         //Deselect checkBoxes
@@ -435,49 +446,70 @@ public class MainScreen extends JFrame {
 
         detailsPackageD.setText("");
         detailsPackageS.setText(" ");
-        detailsPackageS.setText(" ");
-
+        detailsPackageM.setText(" ");
     }
 
-    private int DisplaySportChannel() {
-        SportChannel s1 = new SportChannel("AFN Sports", "EN", "SPRT",5);
-        SportChannel s2 = new SportChannel("beIN Sports", "FR", "SPRT",3);
-        SportChannel s3 = new SportChannel("Eleven Sports", "EN", "SPRT",8);
-        SportChannel s4 = new SportChannel("NBA TV", "EN", "SPRT",6);
-        SportChannel s5 = new SportChannel("NFL Network", "AR", "SPRT",3);
-        SportChannel s6 = new SportChannel("The Ski Channel", "USA", "SPRT",1);
+        private int DisplaySportChannel () {
+
+        ArrayList<SportChannel> sportChannels = getSportChannels();
+
+            String sportChannelString = " ";
+            int packagePrice = 0;
+
+            for (int i = 0; i < sportChannels.size(); i++) {
+                sportChannelString += " " + sportChannels.get(i).getChannelName()
+                        + "  " + sportChannels.get(i).getLanguage()
+                        + "  " + sportChannels.get(i).getPrice()
+                        + "\n";
+                packagePrice += sportChannels.get(i).getPrice();
+            }
+
+            detailsPackageS.setText(sportChannelString);
+            return packagePrice;
+        }
+        private static ArrayList<SportChannel> getSportChannels(){
+            SportChannel s1 = new SportChannel("AFN Sports", "EN", "SPRT", 5);
+            SportChannel s2 = new SportChannel("beIN Sports", "FR", "SPRT", 3);
+            SportChannel s3 = new SportChannel("Eleven Sports", "EN", "SPRT", 8);
+            SportChannel s4 = new SportChannel("NBA TV", "EN", "SPRT", 6);
+            SportChannel s5 = new SportChannel("NFL Network", "AR", "SPRT", 3);
+            SportChannel s6 = new SportChannel("The Ski Channel", "USA", "SPRT", 1);
 
 
-        ArrayList<SportChannel> sportChannels = new ArrayList<>();
-        sportChannels.add(s1);
-        sportChannels.add(s2);
-        sportChannels.add(s3);
-        sportChannels.add(s4);
-        sportChannels.add(s5);
-        sportChannels.add(s6);
+            ArrayList<SportChannel> sportChannels = new ArrayList<>();
+            sportChannels.add(s1);
+            sportChannels.add(s2);
+            sportChannels.add(s3);
+            sportChannels.add(s4);
+            sportChannels.add(s5);
+            sportChannels.add(s6);
 
-        String sportChannelString = " ";
-        int packagePrice = 0;
-
-        for (int i = 0; i < sportChannels.size(); i++) {
-            sportChannelString += " "+ sportChannels.get(i).getChannelName()
-                    +"  "+sportChannels.get(i).getLanguage()
-                    +"  "+sportChannels.get(i).getPrice()
-                    +"\n";
-            packagePrice += sportChannels.get(i).getPrice();
+            return sportChannels;
         }
 
-        detailsPackageS.setText(sportChannelString);
-        return packagePrice;
-    }
+        public int DisplayMovieChannel () {
+        ArrayList<MovieChannel> movieChannels  = getMovieChannel();
 
-    public int DisplayMovieChannel() {
+            StringBuilder movieChannelString = new StringBuilder();
+            int packagePrice = 0;
+
+            for (MovieChannel movieChannel : movieChannels) {
+                movieChannelString.append(movieChannel.getChannelName()).
+                        append("   ").append(movieChannel.getLanguage()).
+                        append("   ").append(movieChannel.getPrice()).append("\n");
+
+                packagePrice += movieChannel.getPrice();
+            }
+            detailsPackageM.setText(String.valueOf(movieChannelString));
+            return packagePrice;
+        }
+    private static ArrayList<MovieChannel> getMovieChannel(){
         MovieChannel m1 = new MovieChannel("MBC Bundle", "EN", "MOV", 4);
-        MovieChannel m2 = new MovieChannel("Cinema One", "EN", "MOV",5);
-        MovieChannel m3 = new MovieChannel("Cinema Pro", "RU", "MOV",6);
-        MovieChannel m4 = new MovieChannel("Cinema 1", "AR", "MOV",2);
-        MovieChannel m5 = new MovieChannel("Movie Home", "GR", "MOV",4);
-        MovieChannel m6 = new MovieChannel("Film4", "FR", "MOV",2);
+        MovieChannel m2 = new MovieChannel("Cinema One", "EN", "MOV", 5);
+        MovieChannel m3 = new MovieChannel("Cinema Pro", "RU", "MOV", 6);
+        MovieChannel m4 = new MovieChannel("Cinema 1", "AR", "MOV", 2);
+        MovieChannel m5 = new MovieChannel("Movie Home", "GR", "MOV", 4);
+        MovieChannel m6 = new MovieChannel("Film4", "FR", "MOV", 2);
 
         ArrayList<MovieChannel> movieChannels = new ArrayList<>();
         movieChannels.add(m1);
@@ -487,57 +519,66 @@ public class MainScreen extends JFrame {
         movieChannels.add(m5);
         movieChannels.add(m6);
 
-        StringBuilder movieChannelString = new StringBuilder();
-        int packagePrice = 0;
+        return movieChannels;
+    }
 
-        for (int i = 0; i < movieChannels.size() ; i++) {
-            movieChannelString.append(movieChannels.get(i).getChannelName()).
-                    append("   ").append(movieChannels.get(i).getLanguage()).
-                    append("   ").append(movieChannels.get(i).getPrice()).append("\n");
+        public int DisplayDocumentary () {
+        ArrayList<DocumentaryChannel> documentaryChannels = getDocumentaryChannel();
 
-            packagePrice += movieChannels.get(i).getPrice();
+            String docChannelString = " ";
+            int packagePrice = 0;
+
+            for (DocumentaryChannel documentaryChannel : documentaryChannels) {
+                docChannelString += documentaryChannel.getChannelName()
+                        + "   " + documentaryChannel.getLanguage()
+                        + "   " + documentaryChannel.getPrice()
+                        + "\n";
+
+
+            }
+            detailsPackageD.setText(docChannelString);
+            return packagePrice;
         }
-        detailsPackageM.setText(String.valueOf(movieChannelString));
-        return packagePrice;
-    }
-
-    private int DisplayDocumentary() {
-        DocumentaryChannel m1 = new DocumentaryChannel("Nat Geo", "Spain", "DOC", 3);
-        DocumentaryChannel m2 = new DocumentaryChannel("PBS America", "EN", "DOC", 4);
-        DocumentaryChannel m3 = new DocumentaryChannel("Al jazeera", "IN", "DOC", 2);
-        DocumentaryChannel m4 = new DocumentaryChannel("Discovery Historia", "AR", "DOC", 5);
+        private static ArrayList<DocumentaryChannel> getDocumentaryChannel(){
+            DocumentaryChannel m1 = new DocumentaryChannel("Nat Geo", "Spain", "DOC", 3);
+            DocumentaryChannel m2 = new DocumentaryChannel("PBS America", "EN", "DOC", 4);
+            DocumentaryChannel m3 = new DocumentaryChannel("Al jazeera", "IN", "DOC", 2);
+            DocumentaryChannel m4 = new DocumentaryChannel("Discovery Historia", "AR", "DOC", 5);
 
 
-        ArrayList<DocumentaryChannel> documentaryChannels = new ArrayList<>();
-        documentaryChannels.add(m1);
-        documentaryChannels.add(m2);
-        documentaryChannels.add(m3);
-        documentaryChannels.add(m4);
+            ArrayList<DocumentaryChannel> documentaryChannels = new ArrayList<>();
+            documentaryChannels.add(m1);
+            documentaryChannels.add(m2);
+            documentaryChannels.add(m3);
+            documentaryChannels.add(m4);
 
-        String docChannelString = " ";
-        int packagePrice = 0;
+            return documentaryChannels;
+        }
+        private void SaveSubscription () {
+            saveSub.add(subscription);
+            File file = new File("c:\\data\\input.txt");
 
-        for (int i = 0; i < documentaryChannels.size(); i++) {
-            docChannelString += documentaryChannels.get(i).getChannelName()
-                    +"   "+documentaryChannels.get(i).getLanguage()
-                    +"   "+documentaryChannels.get(i).getPrice()
-                    +"\n";
+            try {
+                FileOutputStream fileOutputStream = new FileOutputStream(file);
+
+                ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+                objectOutputStream.writeObject(saveSub);
+                objectOutputStream.flush();
+                objectOutputStream.close();
+            } catch (FileNotFoundException ee) {
+                throw new RuntimeException("File not Found");
+            }catch (IOException exception){
+                exception.printStackTrace();
+            }
+        }
+
+
+        public static void main (String[]args){
+
+            MainScreen mainScreen = new MainScreen();
+            mainScreen.setVisible(true);
+            mainScreen.setBounds(20, 10, 1200, 800);
 
 
         }
-        detailsPackageD.setText(docChannelString);
-        return packagePrice;
     }
-
-
-
-
-    public static void main(String[] args) {
-
-        MainScreen mainScreen = new MainScreen();
-        mainScreen.setVisible(true);
-        mainScreen.setBounds(20, 10, 1200, 800);
-
-
-    }
-}
