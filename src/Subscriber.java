@@ -1,4 +1,6 @@
-public class Subscriber {
+import java.io.Serializable;
+
+public class Subscriber implements Serializable {
     String fName;
     String lName;
     String city;
