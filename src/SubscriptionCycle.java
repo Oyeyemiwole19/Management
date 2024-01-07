@@ -1,4 +1,6 @@
-public class SubscriptionCycle {
+import java.io.Serializable;
+
+public class SubscriptionCycle implements Serializable {
 
     String startDate;
     String endDate;
